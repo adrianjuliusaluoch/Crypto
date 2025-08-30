@@ -34,12 +34,12 @@ all_records = worksheet.get_all_records()
 num_rows = len(all_records)
 
 # Check if there are more than 20 rows of data
-if num_rows <= 160:
+if num_rows <= 21:
     print(f"Only {num_rows} rows found. Exiting without processing.")
     sys.exit()  # Exit the script if 20 or fewer rows are found
 
 # Extract Data, Convert to DataFrame
-df = pd.DataFrame(worksheet.get('A2:Z160'), columns=worksheet.row_values(1))
+df = pd.DataFrame(worksheet.get('A2:Z21'), columns=worksheet.row_values(1))
 
 # Original Data
 data = df.copy()
@@ -56,15 +56,16 @@ table_id = 'crypto-stocks-01.storage.top_cryptocurrency'
 # Export Data to BigQuery
 job = client.load_table_from_dataframe(data, table_id)
 while job.state != 'DONE':
-    time.sleep(4)
+    time.sleep(2)
     job.reload()
     print(job.state)
 
 # Delete Exported Rows
-worksheet.delete_rows(2, 160)
+worksheet.delete_rows(2, 21)
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
