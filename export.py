@@ -10,7 +10,7 @@ from google.cloud import bigquery
 from google.oauth2.service_account import Credentials
 
 # Initialize BigQuery client
-client = bigquery.Client(project='macro-parity-444315-c6')
+client = bigquery.Client(project='crypto-stocks-01')
 
 # Define the scope for Google Sheets and BigQuery
 SCOPES = [
@@ -65,5 +65,6 @@ worksheet.delete_rows(2, 481)
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
