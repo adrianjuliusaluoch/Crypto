@@ -61,10 +61,11 @@ while job.state != 'DONE':
     print(job.state)
 
 # Delete Exported Rows
-worksheet.delete_rows(2, 481)
+worksheet.delete_rows(2, 78560)
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
