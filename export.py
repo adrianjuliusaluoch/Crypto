@@ -33,13 +33,13 @@ worksheet = spreadsheet.sheet1  # Select the first sheet
 all_records = worksheet.get_all_records()
 num_rows = len(all_records)
 
-# Check if there are more than 480 rows of data
-if num_rows <= 481:
+# Check if there are more than 20 rows of data
+if num_rows <= 21:
     print(f"Only {num_rows} rows found. Exiting without processing.")
-    sys.exit()  # Exit the script if 480 or fewer rows are found
+    sys.exit()  # Exit the script if 20 or fewer rows are found
 
 # Extract Data, Convert to DataFrame
-df = pd.DataFrame(worksheet.get('A2:Z480'), columns=worksheet.row_values(1))
+df = pd.DataFrame(worksheet.get('A2:Z21'), columns=worksheet.row_values(1))
 
 # Original Data
 data = df.copy()
@@ -61,10 +61,11 @@ while job.state != 'DONE':
     print(job.state)
 
 # Delete Exported Rows
-worksheet.delete_rows(2, 481)
+worksheet.delete_rows(2, 21)
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
