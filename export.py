@@ -51,7 +51,7 @@ data.columns = data.columns.str.lower().str.replace(' ', '_').str.replace(r'[()]
 data['price_usd'] = data['price_usd'].astype(str)
 
 # Define Table ID
-table_id = 'macro-parity-444315-c6.cryptocurrency.top_cryptocurrency'
+table_id = 'crypto-stocks-01.storage.top_cryptocurrency'
 
 # Export Data to BigQuery
 job = client.load_table_from_dataframe(data, table_id)
@@ -65,4 +65,5 @@ worksheet.delete_rows(2, 481)
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
