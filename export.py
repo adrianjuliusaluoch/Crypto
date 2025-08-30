@@ -26,7 +26,7 @@ creds = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
 gc = gspread.authorize(creds)
 
 # Open the Google Sheet by URL
-spreadsheet = gc.open_by_url('https://docs.google.com/spreadsheets/d/1ksrzjDvEHrLFIM6H6sJO943iTtBwtV52TNjzaLSIXpg')
+spreadsheet = gc.open_by_url('https://docs.google.com/spreadsheets/d/1gacmcpjcinT7Dtug--lQz5FGzK05gFJNOE2fklxMbqY')
 worksheet = spreadsheet.sheet1  # Select the first sheet
 
 # Get the total number of rows with data
@@ -65,3 +65,4 @@ worksheet.delete_rows(2, 481)
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
