@@ -66,7 +66,7 @@ worksheet.delete_rows(2, 41)
 # Define SQL Query to Retrieve Open Weather Data from Google Cloud BigQuery
 sql = (
     'SELECT *'
-    'FROM `crypto-stocks-01.storage.top_cryptocurrency`
+    'FROM `crypto-stocks-01.storage.top_cryptocurrency`'
            )
     
 # Run SQL Query
@@ -150,6 +150,7 @@ print(f"Data {data.shape} has been successfully retrieved, saved, and appended t
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
