@@ -3,5 +3,6 @@ pandas
 google-auth  
 pyarrow  
 google-cloud-bigquery  
+google-cloud-bigquery-storage
 db-dtypes  
 pandas_gbq
