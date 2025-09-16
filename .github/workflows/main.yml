@@ -2,7 +2,7 @@ name: Export Google Sheets to Google BigQuery
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Runs every 30 minutes
+    - cron: '*/15 * * * *'  # Runs every 15 minutes
   workflow_dispatch:  # ✅ Enables manual trigger
 
 jobs:
