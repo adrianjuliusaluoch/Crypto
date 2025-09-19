@@ -34,12 +34,12 @@ all_records = worksheet.get_all_records()
 num_rows = len(all_records)
 
 # Check if there are more than 30 rows of data
-if num_rows <= 31:
+if num_rows <= 41:
     print(f"Only {num_rows} rows found. Exiting without processing.")
     sys.exit()  # Exit the script if 30 or fewer rows are found
 
 # Extract Data, Convert to DataFrame
-df = pd.DataFrame(worksheet.get('A2:Z31'), columns=worksheet.row_values(1))
+df = pd.DataFrame(worksheet.get('A2:Z41'), columns=worksheet.row_values(1))
 
 # Original Data
 data = df.copy()
@@ -61,7 +61,7 @@ while job.state != 'DONE':
     print(job.state)
 
 # Delete Exported Rows
-worksheet.delete_rows(2, 31)
+worksheet.delete_rows(2, 41)
 
 # Define SQL Query to Retrieve Open Weather Data from Google Cloud BigQuery
 sql = (
@@ -150,6 +150,7 @@ print(f"Data {data.shape} has been successfully retrieved, saved, and appended t
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
