@@ -26,6 +26,11 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' # Replace with the name of your GitHub Actions secret
 
-    - name: Run your script
+    - name: Run crypto
       run: |
-        python export.py
+        python crypto.py
+      continue-on-error: true
+
+    - name: Run stocks
+      run: |
+        python stocks.py
