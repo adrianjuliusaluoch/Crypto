@@ -3,49 +3,71 @@ import os
 import sys
 import json
 import time
+import requests
+from datetime import datetime, timedelta
 
-import pandas as pd
-import gspread
 from google.cloud import bigquery
 from google.oauth2.service_account import Credentials
 
 # Initialize BigQuery client
 client = bigquery.Client(project='crypto-stocks-01')
 
-# Define the scope for Google Sheets and BigQuery
-SCOPES = [
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/cloud-platform'
-]
+API_URL = "https://api.coingecko.com/api/v3/coins/markets"
+PARAMS = {
+    "vs_currency": "usd",
+    "order": "market_cap_desc",
+    "per_page": 250,
+    "page": 1,
+    "sparkline": "false",
+    "price_change_percentage": "7d"
+}
 
-# Load credentials from environment variable
-credentials_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-creds = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
+def fetch_crypto_data():
+    response = requests.get(API_URL, params=PARAMS)
+    data = response.json()
+    df = pd.DataFrame(data)
 
-# Initialize Google Sheets client
-gc = gspread.authorize(creds)
+    # Compute total volume (% of all 24h volumes)
+    df["total_vol"] = (df["total_volume"] / df["total_volume"].sum()) * 100
 
-# Open the Google Sheet by URL
-spreadsheet = gc.open_by_url('https://docs.google.com/spreadsheets/d/1gacmcpjcinT7Dtug--lQz5FGzK05gFJNOE2fklxMbqY')
-worksheet = spreadsheet.sheet1  # Select the first sheet
+    # Add timestamp in UTC+3 (Kenya time)
+    local_time = datetime.utcnow() + timedelta(hours=3)
+    df["timestamp"] = local_time.strftime("%Y-%m-%d %H:%M:%S")
 
-# Get the total number of rows with data
-all_records = worksheet.get_all_records()
-num_rows = len(all_records)
+    # Select and rename columns to your preferred structure
+    df = df[[
+        "timestamp",
+        "name",
+        "symbol",
+        "current_price",
+        "total_volume",
+        "total_vol",
+        "price_change_percentage_24h",
+        "price_change_percentage_7d_in_currency",
+        "market_cap"
+    ]]
 
-# Check if there are more than 30 rows of data
-if num_rows <= 41:
-    print(f"Only {num_rows} rows found. Exiting without processing.")
-    sys.exit()  # Exit the script if 30 or fewer rows are found
+    df = df.rename(columns={
+        "current_price": "price_usd",
+        "total_volume": "vol_24h",
+        "price_change_percentage_24h": "chg_24h",
+        "price_change_percentage_7d_in_currency": "chg_7d",
+        "market_cap": "market_cap"
+    })
 
-# Extract Data, Convert to DataFrame
-df = pd.DataFrame(worksheet.get('A2:Z41'), columns=worksheet.row_values(1))
+    # Format numeric fields for readability
+    df["price_usd"] = df["price_usd"].map("${:,.2f}".format)
+    df["market_cap"] = df["market_cap"].map("${:,.0f}".format)
+    df["vol_24h"] = df["vol_24h"].map("${:,.2f}".format)
+    df["chg_24h"] = df["chg_24h"].map("{:+.2f}%".format)
+    df["chg_7d"] = df["chg_7d"].map("{:+.2f}%".format)
+    df["total_vol"] = df["total_vol"].map("{:.2f}%".format)
 
-# Original Data
-data = df.copy()
+    return df
 
-# Standardize Column Names
-data.columns = data.columns.str.lower().str.replace(' ', '_').str.replace(r'[()]', '', regex=True)
+# Example usage
+if __name__ == "__main__":
+    data = fetch_crypto_data()
 
 # Standardize Data Types
 data['price_usd'] = data['price_usd'].astype(str)
@@ -59,9 +81,6 @@ while job.state != 'DONE':
     time.sleep(2)
     job.reload()
     print(job.state)
-
-# Delete Exported Rows
-worksheet.delete_rows(2, 41)
 
 # Define SQL Query to Retrieve Open Weather Data from Google Cloud BigQuery
 sql = (
@@ -150,6 +169,7 @@ print(f"Data {data.shape} has been successfully retrieved, saved, and appended t
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
