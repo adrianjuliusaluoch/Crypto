@@ -4,6 +4,7 @@ import sys
 import json
 import time
 import requests
+import pandas as pd
 from datetime import datetime, timedelta
 
 from google.cloud import bigquery
@@ -169,6 +170,7 @@ print(f"Data {data.shape} has been successfully retrieved, saved, and appended t
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
