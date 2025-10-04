@@ -5,7 +5,7 @@ import json
 import time
 import requests
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.cloud import bigquery
 from google.oauth2.service_account import Credentials
@@ -32,7 +32,7 @@ def fetch_crypto_data():
     df["total_vol"] = (df["total_volume"] / df["total_volume"].sum()) * 100
 
     # Add timestamp in UTC+3 (Kenya time)
-    local_time = datetime.utcnow() + timedelta(hours=3)
+    local_time = datetime.now(timezone.utc) + timedelta(hours=3)
     df["timestamp"] = local_time.strftime("%Y-%m-%d %H:%M:%S")
 
     # Select and rename columns to your preferred structure
@@ -170,6 +170,7 @@ print(f"Data {data.shape} has been successfully retrieved, saved, and appended t
 
 # Exit 
 print(f'Cryptocurrency Data Export to Google BigQuery Successful')
+
 
 
 
