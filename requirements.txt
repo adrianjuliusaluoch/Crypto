@@ -1,3 +1,5 @@
+gspread
+google-auth
 pandas   
 pyarrow  
 google-cloud-bigquery  
