@@ -1,6 +1,4 @@
-gspread  
-pandas  
-google-auth  
+pandas   
 pyarrow  
 google-cloud-bigquery  
 google-cloud-bigquery-storage
